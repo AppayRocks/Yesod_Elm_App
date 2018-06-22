@@ -18,6 +18,7 @@ import Control.Monad.Logger (LogSource)
 
 -- Used only when in "auth-dummy-login" setting is enabled.
 import Yesod.Auth.Dummy
+import           Yesod.Auth.HashDB     (authHashDBWithForm)
 
 import Yesod.Auth.OpenId    (authOpenId, IdentifierType (Claimed))
 import Yesod.Default.Util   (addStaticContentExternal)
@@ -99,12 +100,14 @@ instance Yesod App where
 
     defaultLayout :: Widget -> Handler Html
     defaultLayout widget = do
-        master <- getYesod
-        mmsg <- getMessage
+        _ <- getYesod
+        _ <- getMessage
+        _ <- maybeAuthId
 
         muser <- maybeAuthPair
         mcurrentRoute <- getCurrentRoute
 
+{--
         -- Get the breadcrumbs, as defined in the YesodBreadcrumbs instance.
         (title, parents) <- breadcrumbs
 
@@ -137,6 +140,7 @@ instance Yesod App where
 
         let navbarLeftFilteredMenuItems = [x | x <- navbarLeftMenuItems, menuItemAccessCallback x]
         let navbarRightFilteredMenuItems = [x | x <- navbarRightMenuItems, menuItemAccessCallback x]
+--}
 
         -- We break up the default layout into two components:
         -- default-layout is the contents of the body tag, and
@@ -145,7 +149,9 @@ instance Yesod App where
         -- you to use normal widget features in default-layout.
 
         pc <- widgetToPageContent $ do
+            addStylesheet $ StaticR css_style_css
             addStylesheet $ StaticR css_bootstrap_css
+            addScript $ StaticR js_elm_js
             $(widgetFile "default-layout")
         withUrlRenderer $(hamletFile "templates/default-layout-wrapper.hamlet")
 
@@ -161,15 +167,22 @@ instance Yesod App where
         -> Handler AuthResult
     -- Routes not requiring authentication.
     isAuthorized (AuthR _) _ = return Authorized
-    isAuthorized CommentR _ = return Authorized
-    isAuthorized HomeR _ = return Authorized
+--    isAuthorized CommentR _ = return Authorized
+--    isAuthorized HomeR _ = return Authorized
     isAuthorized FaviconR _ = return Authorized
     isAuthorized RobotsR _ = return Authorized
     isAuthorized (StaticR _) _ = return Authorized
 
     -- the profile route requires that the user is authenticated, so we
     -- delegate to that function
-    isAuthorized ProfileR _ = isAuthenticated
+--    isAuthorized ProfileR _ = isAuthenticated
+
+    -- Default to Authorized for now.
+    isAuthorized _ _ = do
+        mu <- maybeAuthId
+        return $ case mu of
+                   Nothing -> AuthenticationRequired
+                   Just _  -> Authorized
 
     -- This function creates static content files in the static folder
     -- and names them based on a hash of their content. This allows
@@ -207,6 +220,7 @@ instance Yesod App where
     makeLogger :: App -> IO Logger
     makeLogger = return . appLogger
 
+{--
 -- Define breadcrumbs.
 instance YesodBreadcrumbs App where
     -- Takes the route that the user is currently on, and returns a tuple
@@ -219,6 +233,7 @@ instance YesodBreadcrumbs App where
     breadcrumb (AuthR _) = return ("Login", Just HomeR)
     breadcrumb ProfileR = return ("Profile", Just HomeR)
     breadcrumb  _ = return ("home", Nothing)
+--}
 
 -- How to run database actions.
 instance YesodPersist App where
@@ -258,9 +273,27 @@ instance YesodAuth App where
 
     -- You can add other plugins like Google Email, email or OAuth here
     authPlugins :: App -> [AuthPlugin App]
-    authPlugins app = [authOpenId Claimed []] ++ extraAuthPlugins
+    -- authPlugins app = [authOpenId Claimed []] ++ extraAuthPlugins
+    authPlugins app = [authHashDBWithForm loginForm (Just . UniqueUser)] ++ extraAuthPlugins
         -- Enable authDummy login if enabled.
         where extraAuthPlugins = [authDummy | appAuthDummyLogin $ appSettings app]
+
+    loginHandler = do
+        clearUltDest
+        muid <- maybeAuthId
+        case muid of
+            Nothing -> defaultLoginHandler
+            Just _ -> redirect HomeR
+
+
+loginForm :: Route App -> Widget
+loginForm action = do
+  _ <- getMessage
+  request <- getRequest
+  let _ = reqToken request
+  _ <- lookupBearerAuth
+  $(widgetFile "loginform")
+
 
 -- | Access function to determine if a user is logged in.
 isAuthenticated :: Handler AuthResult

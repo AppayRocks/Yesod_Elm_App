@@ -1,0 +1,350 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: sans-serif;
+    background-color: #eee;
+    color: #888;
+    margin: 20px;
+}
+
+@media screen and (min-width: 480px) {
+    body {
+        margin: 30px;
+    }
+}
+
+a {
+    color: #888;
+    text-decoration: none;
+}
+
+.form-container {
+    max-width: 420px;
+    margin: auto;
+    background-color: #ddd;
+    padding: 30px;
+    box-shadow: inset 3px 3px 20px 10px #00000006;
+    position: relative;
+}
+
+.form-cover {
+    background-color: #dddddddd;
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.response-container {
+    padding-top: 20px;
+}
+
+.response-container textarea {
+    width: 100%;
+    height: 400px;
+    font-size: 16px;
+    font-family: monospace;
+}
+
+input[type="text"], input[type="password"] {
+    background-color: #eee;
+    box-shadow: 3px 3px 20px 10px #00000006;
+    font-size: 24px;
+    padding: 5px 10px;
+    border: 0px;
+    border-bottom: 2px solid orange;
+    width: 100%;
+    margin-top: 6px
+}
+
+label {
+    display: block;
+    color: #888;
+    margin-bottom: 40px;
+}
+
+label.checkbox {
+    margin-bottom: 10px;
+    flex: 0 1 48%;
+    background-color: #eee;
+    padding: 5px;
+    font-size: 14px;
+}
+
+@media screen and (min-width: 480px) {
+    label.checkbox {
+        flex: 0 1 32%;
+    }
+}
+
+label.disabled {
+    opacity: 0.2;
+}
+
+label.checked {
+    box-shadow: inset 2px 2px 8px 0px #aaa;
+}
+
+.checkboxContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+fieldset {
+    border: 0px;
+    margin: 0;
+    padding: 0;
+}
+
+button {
+    background-color: orange;
+    box-shadow: 3px 3px 20px 10px #00000006;
+    border: 0px;
+    font-size: 24px;
+    padding: 5px 30px;
+    color: white;
+    border-radius: 20px;
+    margin: 15px 0;
+    cursor: pointer;
+    border: 2px solid transparent;
+}
+
+button.disabled {
+    background-color: #bbb;
+    color: #aaa;
+    cursor: not-allowed;
+}
+
+.formErrors {
+    color: #c00;
+    text-align: left;
+    margin: 0;
+    padding-left: 0px;
+    height: 10px;
+    list-style: none;
+    font-size: 14px;
+}
+
+.formMessage {
+    color: green;
+    height: 36px;
+    font-size: 14px;
+}
+
+.formErrors li {
+    padding: 10px 0;
+}
+
+.home-container {
+    text-align: left;
+}
+
+.footer {
+    margin: 20px 0;
+}
+
+input:focus, input.focus {
+    outline: #7ab4ff solid 2px;
+    outline-offset: 0px;
+    border-bottom: 2px solid transparent;
+}
+
+button:focus {
+    outline: orange solid 0px;
+    outline-offset: 0px;
+    border: 2px solid #7ab4ff;
+}
+
+.inputFieldContainer {
+    position: relative;
+}
+
+.iconInsideField {
+    position: absolute;
+    right: 10px;
+    bottom: 0;
+    cursor: pointer;
+}
+
+@keyframes spinner {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.form-cover:before {
+    content: '';
+    box-sizing: border-box;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin-top: -10px;
+    margin-left: -10px;
+    border-radius: 50%;
+    border-top: 2px solid orange;
+    border-right: 2px solid transparent;
+    animation: spinner .6s linear infinite;
+}
+
+.placeholder {
+    position: absolute;
+    top: 15px;
+    left: 10px;
+    pointer-events: none;
+    font-size: 18px;
+    transition: all 0.2s;
+    color: #bbb;
+}
+
+.placeholder.upperPosition {
+    top: -17px;
+    left: 0px;
+    font-size: 15px;
+    color: #888;
+}
+
+.svgContainer {
+    width: 48px;
+    margin: 15px auto;
+}
+
+/* Data Picker */
+
+.elm-datepicker--container {
+    position: relative;
+}
+
+.elm-datepicker--input:focus {
+    outline: 0;
+}
+
+.elm-datepicker--picker {
+    position: absolute;
+    border: 1px solid #CCC;
+    z-index: 10;
+    background: #FFFFFF;
+}
+
+.elm-datepicker--picker-header, .elm-datepicker--weekdays {
+    background: #F2F2F2;
+}
+
+.elm-datepicker--picker-header {
+    display: flex;
+    align-items: center;
+}
+
+.elm-datepicker--prev-container, .elm-datepicker--next-container {
+    flex: 0 1 auto;
+}
+
+.elm-datepicker--month-container {
+    flex: 1 1 auto;
+    padding: 0.5em;
+    display: flex;
+    flex-direction: column;
+}
+
+.elm-datepicker--month, .elm-datepicker--year {
+    flex: 1 1 auto;
+    cursor: default;
+    text-align: center;
+}
+
+.elm-datepicker--year {
+    font-size: 0.6em;
+    font-weight: 700;
+}
+
+.elm-datepicker--prev, .elm-datepicker--next {
+    border: 6px solid transparent;
+    display: block;
+    width: 0;
+    height: 0;
+    padding: 0 0.2em;
+}
+
+.elm-datepicker--prev {
+    border-right-color: #AAA;
+}
+
+.elm-datepicker--prev:hover {
+    border-right-color: #BBB;
+}
+
+.elm-datepicker--next {
+    border-left-color: #AAA;
+}
+
+.elm-datepicker--next:hover {
+    border-left-color: #BBB;
+}
+
+.elm-datepicker--table {
+    border-spacing: 0;
+    border-collapse: collapse;
+    font-size: 0.8em;
+}
+
+.elm-datepicker--table td {
+    width: 2em;
+    height: 2em;
+    text-align: center;
+}
+
+.elm-datepicker--row {
+    border-top: 1px solid #F2F2F2;
+}
+
+.elm-datepicker--dow {
+    border-bottom: 1px solid #CCC;
+    cursor: default;
+}
+
+.elm-datepicker--day {
+    cursor: pointer;
+}
+
+.elm-datepicker--day:hover {
+    background: #F2F2F2;
+}
+
+.elm-datepicker--disabled {
+    cursor: default;
+    color: #DDD;
+}
+
+.elm-datepicker--disabled:hover {
+    background: inherit;
+}
+
+.elm-datepicker--picked {
+    color: white;
+    background: darkblue;
+}
+
+.elm-datepicker--picked:hover {
+    background: darkblue;
+}
+
+.elm-datepicker--today {
+    font-weight: bold;
+}
+
+.elm-datepicker--other-month {
+    color: #AAA;
+}
+
+.elm-datepicker--other-month.elm-datepicker--disabled {
+    color: #EEE;
+}
+
+.elm-datepicker--other-month.elm-datepicker--picked {
+    color: white;
+}
