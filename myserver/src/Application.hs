@@ -45,6 +45,30 @@ import Handler.Home
 import Handler.Comment
 import Handler.Profile
 
+import           Crypto.PasswordStore
+import           Control.Concurrent
+
+
+init :: App -> IO ()
+init foundation = do
+  let userName = "admin"
+      password = "password"
+  pw <- makePassword password 17
+  runSqlPool ( do
+                  user <- selectFirst [ UserIdent ==. userName ] []
+                  case user of
+                    Just _ -> return ()
+                    Nothing -> do
+                      _ <- insertEntity User { userIdent = userName
+                                        , userPassword = Just $ decodeUtf8 pw
+                                        , userIsAdmin = True
+                                        }
+                      return ()
+             ) $ appConnPool foundation
+  return ()
+
+
+
 -- This line actually creates our YesodDispatch instance. It is the second half
 -- of the call to mkYesodData which occurs in Foundation.hs. Please see the
 -- comments there for more details.
@@ -132,6 +156,7 @@ getApplicationDev = do
     foundation <- makeFoundation settings
     wsettings <- getDevSettings $ warpSettings foundation
     app <- makeApplication foundation
+    _ <- forkIO $ Application.init foundation
     return (wsettings, app)
 
 getAppSettings :: IO AppSettings
@@ -157,6 +182,8 @@ appMain = do
 
     -- Generate a WAI Application from the foundation
     app <- makeApplication foundation
+
+    _ <- forkIO $ Application.init foundation
 
     -- Run the application with Warp
     runSettings (warpSettings foundation) app

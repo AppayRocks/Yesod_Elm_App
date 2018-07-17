@@ -8,3 +8,6 @@
 
     <p>
       Your data is protected with us <strong><span class="username">"Admin"</span></strong>!
+
+    <hl>
+    <a href="auth/logout">Logout</a>

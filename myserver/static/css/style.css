@@ -113,6 +113,19 @@ button {
     border: 2px solid transparent;
 }
 
+#login_button {
+    background-color: orange;
+    box-shadow: 3px 3px 20px 10px #00000006;
+    border: 0px;
+    font-size: 24px;
+    padding: 5px 30px;
+    color: white;
+    border-radius: 20px;
+    margin: 15px 0;
+    cursor: pointer;
+    border: 2px solid transparent;
+}
+
 button.disabled {
     background-color: #bbb;
     color: #aaa;

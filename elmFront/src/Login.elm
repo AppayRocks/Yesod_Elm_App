@@ -9,19 +9,24 @@ import Html.Events exposing (..)
 import Http
 import Json.Encode as Encode
 import Validate exposing (Validator, ifBlank, validate)
+-- import Window
 
 
 -- MAIN
 
 
-main : Program Never Model Msg
+main : Program Parameters Model Msg
 main =
-    Html.program
-        { init = ( initialModel, Cmd.none )
+    Html.programWithFlags
+        { init = initialModel
         , view = view
         , update = update
         , subscriptions = \_ -> Sub.none
         }
+
+type alias Parameters =
+    { action : String }
+
 
 -- MODEL --
 
@@ -31,16 +36,22 @@ type alias Model =
     , email : String
     , password : String
     , response : Maybe String
+    , parameters : Parameters
     }
 
 
-initialModel : Model
-initialModel =
+initialModel : Parameters -> ( Model, Cmd Msg )
+initialModel parameters = (
     { errors = []
     , email = ""
     , password = ""
     , response = Nothing
+    , parameters = parameters
     }
+    , Cmd.none )
+--        ! [ Task.perform Resized Window.size
+--          ]
+
 
 type alias Error =
     ( FormField, String )
@@ -70,10 +81,12 @@ update msg model =
 
         SubmitForm ->
             case validate modelValidator model of
-                [] ->
+                [] -> ( model, Cmd.none )
+{--
                     ( { model | errors = [], response = Nothing }
                     , Http.send Response (postRequest model)
                     )
+--}
 
                 errors ->
                     ( { model | errors = errors }
@@ -109,7 +122,7 @@ postRequest model =
     Http.request
         { method = "POST"
         , headers = []
-        , url = "http://localhost:8000/"
+        , url = "http://localhost:53001/"
         , body = body
         , expect = Http.expectString
         , timeout = Nothing
@@ -165,13 +178,16 @@ viewSimple exampleVersion viewForm =
 viewForm : Model -> Html Msg
 viewForm model =
     Html.form
-        [ onSubmit SubmitForm
+        [ method "post"
+        , action model.parameters.action
         , class "form-container"
+--        , onSubmit SubmitForm
         ]
         [ label []
             [ text "Email"
             , input
                 [ type_ "text"
+                , name "username"
                 , placeholder "Email"
                 , onInput SetEmail
                 , value model.email
@@ -183,6 +199,7 @@ viewForm model =
             [ text "Password"
             , input
                 [ type_ "password"
+                , name "password"
                 , placeholder "Password"
                 , onInput SetPassword
                 , value model.password
@@ -190,9 +207,18 @@ viewForm model =
                 []
             , viewFormErrors Password model.errors
             ]
-        , button
+        , input
+            [ type_ "submit"
+            , value "Login"
+            , id "login_button"
+--            , onSubmit SubmitForm
+            ]
+            []
+
+{--        , button
             []
             [ text "Submit" ]
+--}
         ]
 
 

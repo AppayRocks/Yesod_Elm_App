@@ -1,0 +1,1 @@
+Elm.Login.fullscreen({ action : "@{action}" });
