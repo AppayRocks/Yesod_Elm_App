@@ -1,0 +1,14 @@
+dist*
+*.hi
+*.o
+.hsenv*
+.DS_Store
+*.swp
+*.keter
+*~
+\#*
+elmFront/elm-stuff/
+elmFront/node_modules/
+elmFront/npm-debug.log
+elmFront/package-lock.json
+myserver/static/js/elm.js

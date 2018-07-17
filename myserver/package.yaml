@@ -38,6 +38,7 @@ dependencies:
 - wai-logger >=2.2 && <2.4
 - file-embed
 - safe
+- pwstore-fast
 - unordered-containers
 - containers
 - vector
@@ -45,6 +46,7 @@ dependencies:
 - case-insensitive
 - wai
 - foreign-store
+- yesod-auth-hashdb
 
 # The library contains all of our application code. The executable
 # defined below is just a thin wrapper.

@@ -1,13 +1,29 @@
-{-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE TypeFamilies #-}
-module Handler.Home where
+{-# LANGUAGE NoImplicitPrelude     #-}
+{-# LANGUAGE OverloadedStrings     #-}
+{-# LANGUAGE TemplateHaskell       #-}
+{-# LANGUAGE TypeFamilies          #-}
+module Handler.Home
+       ( getHomeR
+       ) where
 
-import Import
-import Yesod.Form.Bootstrap3 (BootstrapFormLayout (..), renderBootstrap3)
-import Text.Julius (RawJS (..))
+import           Import
+import           Text.Julius           (RawJS (..))
+import           Yesod.Form.Bootstrap3 (BootstrapFormLayout (..),
+                                        renderBootstrap3)
+-- import           WebsocketController
+
+
+getHomeR :: Handler Html
+getHomeR = do
+  uid <- requireAuthId
+--  startWebsocket uid
+  defaultLayout $ do
+    setTitle "WebAppY"
+    $(widgetFile "profile")
+
+
+{-- Ysode default Homepage ------------
 
 -- Define our data that will be used for creating the form.
 data FileForm = FileForm
@@ -71,3 +87,5 @@ commentIds = ("js-commentForm", "js-createCommentTextarea", "js-commentList")
 
 getAllComments :: DB [Entity Comment]
 getAllComments = selectList [] [Asc CommentId]
+
+--}
